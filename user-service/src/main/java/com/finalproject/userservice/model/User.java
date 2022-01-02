@@ -9,14 +9,17 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity
@@ -64,7 +67,12 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        List<GrantedAuthority> list = new ArrayList<GrantedAuthority>();
+
+        String ROLE_PREFIX = "ROLE_";
+        list.add(new SimpleGrantedAuthority(ROLE_PREFIX + role));
+
+        return list;
     }
 
 
@@ -85,6 +93,10 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        if(this.getRole() == RoleType.ADMIN){
+            return true;
+        }else{
+            return this.enabled;
+        }
     }
 }

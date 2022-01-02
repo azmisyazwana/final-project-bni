@@ -42,7 +42,8 @@ public class AuthServiceImpl implements AuthService {
             user.setRole(req.getRole());
         }
         user.setGender(req.getGender());
-        user.setEnabled(false);
+        user.setEnabled(user.isEnabled());
+//        user.setEnabled(false);
         return userRepository.save(user);
     }
 

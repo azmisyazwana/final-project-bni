@@ -1,6 +1,10 @@
 package com.finalproject.userservice.config;
 
+import com.finalproject.userservice.dto.output.AccountUserOutput;
+import com.finalproject.userservice.model.User;
+import com.finalproject.userservice.repository.UserRepository;
 import com.finalproject.userservice.security.SecurityFilter;
+import com.finalproject.userservice.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +19,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -50,6 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .authorizeHttpRequests()
                 .antMatchers("/auth/**").permitAll()
+                .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
 //                        .antMatchers("/users").permitAll()
 
                 .anyRequest().authenticated();
