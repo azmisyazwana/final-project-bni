@@ -7,8 +7,10 @@ import com.finalproject.userservice.repository.UserRepository;
 import com.finalproject.userservice.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.apache.commons.collections4.IterableUtils;
+import org.springframework.web.server.ResponseStatusException;
 
 
 import java.util.ArrayList;
@@ -74,6 +76,8 @@ public class AdminServiceImpl implements AdminService {
                User temp = userById.get();
                temp.setEnabled(true);
                userRepository.save(temp);
+           }else{
+               throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id not found");
            }
         }
     }

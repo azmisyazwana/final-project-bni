@@ -5,7 +5,11 @@ import com.finalproject.userservice.dto.output.AccountUserOutput;
 import com.finalproject.userservice.dto.output.BaseResponse;
 import com.finalproject.userservice.service.AdminService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,5 +49,15 @@ public class AdminController {
     public ResponseEntity<BaseResponse<Boolean>> activateAccountById(@RequestBody List<IdRequest> userActivate){
         adminService.activateMultipleAccount(userActivate);
         return ResponseEntity.ok(new BaseResponse<>(Boolean.TRUE));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public BaseResponse<?> handleValidationError(MethodArgumentNotValidException ex){
+        BindingResult bindingResult = ex.getBindingResult();
+        FieldError fieldError = bindingResult.getFieldError();
+        String  defaultMessage = fieldError.getDefaultMessage();
+        return new BaseResponse<>(false, defaultMessage);
     }
 }
