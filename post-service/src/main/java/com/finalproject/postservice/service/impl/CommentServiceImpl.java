@@ -31,25 +31,25 @@ public class CommentServiceImpl implements CommentService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
 
-    @Override
-    public CommentOutput createComment(Comment req) {
-        CommentOutput comment = new CommentOutput();
-        User user = restTemplate.getForObject(USER_PATH + req.getUserId(), User.class);
-        Post post = postRepository.findById(req.getPostId()).orElseThrow(() -> {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found");
-        });
-        if(commentRepository.findById(req.getCommentId()).isPresent()){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Error duplicate comment id");
-        };
-        comment.setCommentId(req.getCommentId());
-        comment.setContentComment(req.getContentComment());
-        comment.setCreatedAt(LocalDateTime.now());
-        comment.setUpdatedAt(LocalDateTime.now());
-        comment.setPost(post);
-        comment.setUser(user);
-        commentRepository.save(req);
-        return comment;
-    }
+//    @Override
+//    public CommentOutput createComment(Comment req) {
+//        CommentOutput comment = new CommentOutput();
+//        User user = restTemplate.getForObject(USER_PATH + req.getUserId(), User.class);
+//        Post post = postRepository.findById(req.getPostId()).orElseThrow(() -> {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found");
+//        });
+//        if(commentRepository.findById(req.getCommentId()).isPresent()){
+//            throw new ResponseStatusException(HttpStatus.CONFLICT, "Error duplicate comment id");
+//        };
+//        comment.setCommentId(req.getCommentId());
+//        comment.setContentComment(req.getContentComment());
+//        comment.setCreatedAt(LocalDateTime.now());
+//        comment.setUpdatedAt(LocalDateTime.now());
+//        comment.setPost(post);
+//        comment.setUser(user);
+//        commentRepository.save(req);
+//        return comment;
+//    }
 
     @Override
     public Comment getComment(String id) {
@@ -59,22 +59,22 @@ public class CommentServiceImpl implements CommentService {
         return comment;
     }
 
-    @Override
-    public CommentOutput getCommentAndUser(String id) {
-        Comment comment = this.getComment(id);
-        Post post = postRepository.findById(comment.getPostId()).orElseThrow(() -> {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found");
-        });
-        User user = restTemplate.getForObject(USER_PATH + comment.getUserId(), User.class);
-        CommentOutput commentOutput = new CommentOutput();
-        commentOutput.setCommentId(comment.getCommentId());
-        commentOutput.setContentComment(comment.getContentComment());
-        commentOutput.setPost(post);
-        commentOutput.setUser(user);
-        commentOutput.setCreatedAt(comment.getCreatedAt());
-        commentOutput.setUpdatedAt(comment.getUpdatedAt());
-        return commentOutput;
-    }
+//    @Override
+//    public CommentOutput getCommentAndUser(String id) {
+//        Comment comment = this.getComment(id);
+//        Post post = postRepository.findById(comment.getPostId()).orElseThrow(() -> {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found");
+//        });
+//        User user = restTemplate.getForObject(USER_PATH + comment.getUserId(), User.class);
+//        CommentOutput commentOutput = new CommentOutput();
+//        commentOutput.setCommentId(comment.getCommentId());
+//        commentOutput.setContentComment(comment.getContentComment());
+//        commentOutput.setPost(post);
+//        commentOutput.setUser(user);
+//        commentOutput.setCreatedAt(comment.getCreatedAt());
+//        commentOutput.setUpdatedAt(comment.getUpdatedAt());
+//        return commentOutput;
+//    }
 
     @Override
     public List<Comment> getAllComment() {
@@ -82,16 +82,16 @@ public class CommentServiceImpl implements CommentService {
         return comments;
     }
 
-    @Override
-    public CommentOutput updateComment(Comment req, String id) {
-        Comment comment = this.getComment(id);
-        comment.setContentComment(req.getContentComment());
-        comment.setUpdatedAt(LocalDateTime.now());
-        commentRepository.save(comment);
-
-        CommentOutput commentOutput = this.getCommentAndUser(id);
-        return commentOutput;
-    }
+//    @Override
+//    public CommentOutput updateComment(Comment req, String id) {
+//        Comment comment = this.getComment(id);
+//        comment.setContentComment(req.getContentComment());
+//        comment.setUpdatedAt(LocalDateTime.now());
+//        commentRepository.save(comment);
+//
+//        CommentOutput commentOutput = this.getCommentAndUser(id);
+//        return commentOutput;
+//    }
 
     @Override
     public Comment deleteComment(String id) {

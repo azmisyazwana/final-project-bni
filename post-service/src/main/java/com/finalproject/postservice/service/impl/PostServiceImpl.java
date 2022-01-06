@@ -39,7 +39,7 @@ public class PostServiceImpl implements PostService {
     private final CategoryRepository categoryRepository;
 
 
-    private static final String USER_PATH = "http://localhost:8080/users/user-id-for-post/";
+    private static final String USER_PATH = "http://USER-SERVICE/users/user-id-for-post/";
 
     @Override
     public PostOutput createPost(Post postReq) {
@@ -166,25 +166,7 @@ public class PostServiceImpl implements PostService {
         postOutput.setTitle(postReq.getTitle());
 
         return postOutput;
-
-
-//        Post post1 = postRepository.findById(id).get();
-//        if (postReq.getTitle() != null){
-//            post1.setTitle(postReq.getTitle());
-//        }
-//        if (postReq.getCategoryId() != null){
-//            post1.setCategoryId(postReq.getCategoryId());
-//        }
-//        if (postReq.getUserId() != null){
-//            post1.setUserId(postReq.getUserId());
-//        }
-//        if (postReq.getContent() != null){
-//            post1.setContent(postReq.getContent());
-//        }
-//        post1.setUpdatedAt(LocalDateTime.now());
-//        postRepository.save(post1);
-//        return this.getPostAndUser(post1.getPostId());
-//    }
+    }
 
 
     @Override
@@ -194,5 +176,57 @@ public class PostServiceImpl implements PostService {
         });
         postRepository.deleteById(id);
         return post;
+    }
+
+    @Override
+    public CommentOutput createComment(Comment req) {
+        CommentOutput comment = new CommentOutput();
+        User user = restTemplate.getForObject(USER_PATH + req.getUserId(), User.class);
+        Post post = postRepository.findById(req.getPostId()).orElseThrow(() -> {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found");
+        });
+        if(commentRepository.findById(req.getCommentId()).isPresent()){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Error duplicate comment id");
+        };
+        comment.setCommentId(req.getCommentId());
+        comment.setContentComment(req.getContentComment());
+        comment.setCreatedAt(LocalDateTime.now());
+        comment.setUpdatedAt(LocalDateTime.now());
+        comment.setPost(post);
+        comment.setUser(user);
+        commentRepository.save(req);
+        return comment;
+    }
+
+    @Override
+    public CommentOutput updateComment(Comment req, String id) {
+        Comment comment = commentRepository.findById(id).orElseThrow(() -> {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found");
+        });
+        comment.setContentComment(req.getContentComment());
+        comment.setUpdatedAt(LocalDateTime.now());
+        commentRepository.save(comment);
+
+        CommentOutput commentOutput = this.getCommentAndUser(id);
+        return commentOutput;
+    }
+
+    @Override
+    public CommentOutput getCommentAndUser(String id) {
+        Comment comment = commentRepository.findById(id).orElseThrow(() -> {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found");
+        });
+        Post post = postRepository.findById(comment.getPostId()).orElseThrow(() -> {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found");
+        });
+        User user = restTemplate.getForObject(USER_PATH + comment.getUserId(), User.class);
+        CommentOutput commentOutput = new CommentOutput();
+        commentOutput.setCommentId(comment.getCommentId());
+        commentOutput.setContentComment(comment.getContentComment());
+        commentOutput.setPost(post);
+        commentOutput.setUser(user);
+        commentOutput.setCreatedAt(comment.getCreatedAt());
+        commentOutput.setUpdatedAt(comment.getUpdatedAt());
+        return commentOutput;
     }
 }

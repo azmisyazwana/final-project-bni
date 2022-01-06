@@ -25,7 +25,7 @@ public class LikeServiceImpl implements LikeService {
     private final PostRepository postRepository;
     private final LikeRepository likeRepository;
 
-    private static final String USER_PATH = "http://localhost:8080/users/user-id-for-post/";
+    private static final String USER_PATH = "http://USER-SERVICE/users/user-id-for-post/";
 
     @Override
     public LikeOutput createLike(Like req){

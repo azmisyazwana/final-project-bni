@@ -1,8 +1,10 @@
 package com.finalproject.postservice.service;
 
+import com.finalproject.postservice.VO.CommentOutput;
 import com.finalproject.postservice.VO.PostDetailedOutput;
 import com.finalproject.postservice.VO.PostOutput;
 //import com.finalproject.postservice.dto.PostResponse;
+import com.finalproject.postservice.model.Comment;
 import com.finalproject.postservice.model.Post;
 
 import java.util.List;
@@ -15,5 +17,7 @@ public interface PostService {
     Post getPost(String id);
     PostOutput updatePost(Post postReq, String id);
     Post deletePost(String id);
-
+    CommentOutput createComment(Comment req);
+    CommentOutput getCommentAndUser(String id);
+    CommentOutput updateComment(Comment req, String id);
 }

@@ -1,6 +1,7 @@
 package com.finalproject.postservice.controller;
 
 import com.finalproject.postservice.VO.CommentOutput;
+import com.finalproject.postservice.model.Category;
 import com.finalproject.postservice.model.Comment;
 import com.finalproject.postservice.service.CommentService;
 import com.finalproject.postservice.service.PostService;
@@ -15,12 +16,11 @@ import java.util.List;
 @RequestMapping("/comments")
 @AllArgsConstructor
 public class CommentController {
-//    private final PostService postService;
     private final CommentService commentService;
-
+    private final PostService postService;
     @PostMapping
     public ResponseEntity<CommentOutput> createComment(@RequestBody Comment req){
-        CommentOutput commentOutput = commentService.createComment(req);
+        CommentOutput commentOutput = postService.createComment(req);
         return ResponseEntity.ok(commentOutput);
     }
 
@@ -38,13 +38,13 @@ public class CommentController {
 
     @GetMapping("comment-user/{id}")
     public ResponseEntity<CommentOutput> getCommentAndUser(@PathVariable String id){
-        CommentOutput commentOutput = commentService.getCommentAndUser(id);
+        CommentOutput commentOutput = postService.getCommentAndUser(id);
         return ResponseEntity.ok(commentOutput);
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<CommentOutput> updateComment(@RequestBody Comment req, @PathVariable String id){
-        CommentOutput commentOutput = commentService.updateComment(req, id);
+        CommentOutput commentOutput = postService.updateComment(req, id);
         return ResponseEntity.ok(commentOutput);
     }
 
