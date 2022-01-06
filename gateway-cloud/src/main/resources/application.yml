@@ -1,0 +1,86 @@
+server:
+  port: 8181
+
+spring:
+  application:
+    name: api-gateway
+  sleuth:
+    sampler:
+      probability: 1.0
+  cloud:
+    gateway:
+      routes:
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/user/**
+            - Path=/auth/**
+            - Path=/admin/**
+        - id: post-service
+          uri: lb://post-service
+          predicates:
+            - Path=/posts/**
+            - Path=/comments/**
+            - Path=/likes/**
+            - Path=/categories/**
+      discovery:
+        locator:
+          enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}:${random.uuid}
+
+jwt:
+  secret: AsKtjTmsGTrE79HG7sVDRCU3ZAybuwM9awn3rkDc
+#
+#spring:
+#  application:
+#    name: API-GATEWAY
+#  cloud:
+#    gateway:
+#      routes:
+#        - id: USER-SERVICE
+#          uri: lb://USER-SERVICE
+#          predicates:
+#            - Path=/users/**
+#        - id: POST-SERVICE
+#          uri: lb://POST-SERVICE
+#          predicates:
+#            - Path=/posts/**
+##        - id: ADMIN-SERVICE
+##          uri: lb://ADMIN-SERVICE
+##          predicates:
+##            - Path=/admin/**
+##        - id: AUTH-SERVICE
+##          uri: lb://AUTH-SERVICE
+##          predicates:
+##            - Path=/auth/**
+##        - id: COMMENT-SERVICE
+##          uri: lb://COMMENT-SERVICE
+##          predicates:
+##            - Path=/comments/**
+##        - id: CATEGORY-SERVICE
+##          uri: lb://CATEGORY-SERVICE
+##          predicates:
+##            - Path=/categories/**
+##        - id: LIKE-SERVICE
+##          uri: lb://LIKE-SERVICE
+##          predicates:
+##            - Path=/likes/**
+#eureka:
+#  client:
+#    register-with-eureka: true
+#    fetch-registry: true
+#    service-url:
+#      defaultZone: http://localhost:8761/eureka/
+#    instance:
+#      hostname: localhost
