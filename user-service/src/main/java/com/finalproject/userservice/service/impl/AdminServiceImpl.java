@@ -3,11 +3,14 @@ package com.finalproject.userservice.service.impl;
 import com.finalproject.userservice.dto.input.IdRequest;
 import com.finalproject.userservice.dto.output.AccountUserOutput;
 import com.finalproject.userservice.model.User;
+import com.finalproject.userservice.model.UserProfile;
+import com.finalproject.userservice.repository.UserProfileRepository;
 import com.finalproject.userservice.repository.UserRepository;
 import com.finalproject.userservice.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.apache.commons.collections4.IterableUtils;
 import org.springframework.web.server.ResponseStatusException;
@@ -23,6 +26,7 @@ public class AdminServiceImpl implements AdminService {
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final UserProfileRepository userProfileRepository;
 
     @Override
     public List<AccountUserOutput> getAllUser() {
@@ -37,7 +41,18 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public AccountUserOutput getUserById(Long id) {
+    public AccountUserOutput getUserById(Long id){ //throws UsernameNotFoundException {
+//        User user = userRepository.getDistinctTopByUsername(username);
+//        if(user != null){
+//            AccountUserOutput accountUserOutput = new AccountUserOutput();
+//            accountUserOutput.setId(user.getId());
+//            accountUserOutput.setUsername(user.getUsername());
+//            accountUserOutput.setEmail(user.getEmail());
+//            accountUserOutput.setGender(user.getGender());
+//            return accountUserOutput;
+//        }else{
+//            throw new UsernameNotFoundException("Username not found");
+//        }
         Optional<User> user = userRepository.findById(id);
         if(user.isPresent()){
             User temp = user.get();

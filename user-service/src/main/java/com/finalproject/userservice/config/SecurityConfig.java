@@ -1,10 +1,6 @@
 package com.finalproject.userservice.config;
 
-import com.finalproject.userservice.dto.output.AccountUserOutput;
-import com.finalproject.userservice.model.User;
-import com.finalproject.userservice.repository.UserRepository;
-import com.finalproject.userservice.security.SecurityFilter;
-import com.finalproject.userservice.service.AdminService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +24,7 @@ import java.util.List;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userService;
-    private final SecurityFilter securityFilter;
+//    private final SecurityFilter securityFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -56,8 +52,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .authorizeHttpRequests()
                 .antMatchers("/auth/**").permitAll()
-                .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
-//                        .antMatchers("/users").permitAll()
+                .antMatchers("/admin/**").permitAll()
+                .antMatchers("/users/**").permitAll()
+//                .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+
+
+//                .antMatchers("users/admin/**").permitAll()
+//                        .antMatchers("/users/**").permitAll()
 
                 .anyRequest().authenticated();
 
@@ -79,7 +80,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
         http.sessionManagement().sessionCreationPolicy((SessionCreationPolicy.STATELESS));
-        http.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
+//        http.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
 }

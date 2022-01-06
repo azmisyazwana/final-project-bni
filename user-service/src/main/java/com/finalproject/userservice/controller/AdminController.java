@@ -12,6 +12,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -26,7 +27,6 @@ public class AdminController {
         return ResponseEntity.ok(adminService.getAllUser());
     }
 
-//    @PreAuthorize("ADMIN")
     @GetMapping("/{id}")
     public ResponseEntity<BaseResponse<AccountUserOutput>> getUserById(@PathVariable Long id){
         AccountUserOutput accountUserOutput = adminService.getUserById(id);

@@ -6,7 +6,7 @@ import java.util.Date;
 
 @Data
 public class CreateProfileRequest {
-//    public Long id;
+    public Long id;
     private String fullname;
     private Date dob;
     private String address;

@@ -28,9 +28,10 @@ public class UserProfileServiceImpl implements UserProfileService {
 
 
     @Override
-    public UserProfile createProfile(Authentication authentication, CreateProfileRequest req) {
-        String username = authentication.getName();
-        User user = userRepository.findByUsername(username);
+    public UserProfile createProfile(CreateProfileRequest req) {
+        User user = userRepository.findById(req.getId()).orElseThrow(() -> {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        });
         UserProfile userProfile = new UserProfile();
         userProfile.setUser(user);
 //        userProfile.setUserId(user.getId());
@@ -44,11 +45,10 @@ public class UserProfileServiceImpl implements UserProfileService {
     }
 
     @Override
-    public UpdateProfileResponse updateProfile(Authentication authentication, UpdateProfileRequest req, Long id) throws Exception {
-        String username = authentication.getName();
-        User user = userRepository.findByUsername(username);
+    public UpdateProfileResponse updateProfile(UpdateProfileRequest req, Long id) throws Exception {
+        User user = userRepository.getDistinctTopByUsername(req.getUsername());
+//        User user = userRepository.findByUsername(username);
         UpdateProfileResponse updateProfileResponse = new UpdateProfileResponse();
-        log.info(id.equals(user.getId()));
         if (id.equals(user.getId())) {
             Optional<UserProfile> userProfile = userProfileRepository.findById(id);
             log.info("masuk sini");
@@ -67,6 +67,7 @@ public class UserProfileServiceImpl implements UserProfileService {
                 userRepository.save(user);
 
                 updateProfileResponse.setUser(user);
+                updateProfileResponse.setUserProfile(tempUserProfile);
             }else{
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Username not found");
             }

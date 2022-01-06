@@ -7,6 +7,6 @@ import com.finalproject.userservice.model.UserProfile;
 import org.springframework.security.core.Authentication;
 
 public interface UserProfileService {
-    UserProfile createProfile(Authentication authentication, CreateProfileRequest req);
-    UpdateProfileResponse updateProfile(Authentication authentication, UpdateProfileRequest req, Long id) throws Exception;
+    UserProfile createProfile(CreateProfileRequest req);
+    UpdateProfileResponse updateProfile(UpdateProfileRequest req, Long id) throws Exception;
 }

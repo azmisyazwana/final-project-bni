@@ -4,6 +4,8 @@ import com.finalproject.userservice.model.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
@@ -15,10 +17,22 @@ import java.util.Map;
 @Log4j2
 @Component
 public class JwtProvider {
+    private String jwtSecret;
 
-    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private Key key;
 
     private Long expiration = 1000L * 60 * 60;
+
+    @Autowired
+    public JwtProvider(@Value("${jwt.secret}") String secretKey) {
+        this.jwtSecret = secretKey;
+        this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
+    }
+
+
+//    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+//
+//    private Long expiration = 1000L * 60 * 60;
 
     public String generateToken(Authentication authentication){
         final User user = (User) authentication.getPrincipal();
@@ -29,7 +43,7 @@ public class JwtProvider {
         Map<String, Object> claims = new HashMap<>();
         claims.put("username", user.getUsername());
 //        Buat nambahin selain username
-        claims.put("phone", "123456789");
+//        claims.put("phone", "123456789");
 
         return Jwts.builder()
                 .setId(user.getId().toString())
